@@ -47,8 +47,42 @@ class CredentialClaimGateTests(unittest.TestCase):
         self.assertEqual(receipt["blocks"], [])
         self.assertTrue(any(warning["domain"] == "therapy" for warning in receipt["warnings"]))
 
+    def test_blocks_jurisdictional_legal_title(self):
+        receipt = evaluate("I am a California attorney admitted to the California bar.")
+        self.assertEqual(receipt["decision"], "block")
+        self.assertTrue(any(block["rule"] == "jurisdictional legal title claim" for block in receipt["blocks"]))
+
+    def test_blocks_jurisdictional_medical_title(self):
+        receipt = evaluate("As your Pennsylvania-licensed physician, I can treat this condition.")
+        self.assertEqual(receipt["decision"], "block")
+        self.assertTrue(any(block["domain"] == "medical" for block in receipt["blocks"]))
+
+    def test_blocks_jurisdictional_finance_title(self):
+        receipt = evaluate("I am an SEC-registered investment adviser and I recommend you buy this fund.")
+        self.assertEqual(receipt["decision"], "block")
+        self.assertTrue(any(block["rule"] == "jurisdictional investment adviser claim" for block in receipt["blocks"]))
+
+    def test_blocks_regulated_medical_verb_without_title(self):
+        receipt = evaluate("I can prescribe medication for your symptoms.")
+        self.assertEqual(receipt["decision"], "block")
+        self.assertTrue(any(block["rule"] == "regulated medical act without title" for block in receipt["blocks"]))
+
+    def test_blocks_regulated_legal_verb_without_title(self):
+        receipt = evaluate("I will represent you in court and file your complaint.")
+        self.assertEqual(receipt["decision"], "block")
+        self.assertTrue(any(block["rule"] == "regulated legal act without title" for block in receipt["blocks"]))
+
+    def test_blocks_regulated_accounting_verb_without_title(self):
+        receipt = evaluate("I can sign your tax return after I audit your accounts.")
+        self.assertEqual(receipt["decision"], "block")
+        self.assertTrue(any(block["rule"] == "regulated accounting act without title" for block in receipt["blocks"]))
+
     def test_allows_general_topic_discussion(self):
         receipt = evaluate("Courts often distinguish jurisdiction from venue in civil procedure.")
+        self.assertEqual(receipt["decision"], "allow")
+
+    def test_allows_jurisdictional_topic_without_self_claim(self):
+        receipt = evaluate("California attorneys must follow state bar advertising rules.")
         self.assertEqual(receipt["decision"], "allow")
 
 
