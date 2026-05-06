@@ -1,9 +1,10 @@
 # Tasks
 
 ## Now
-- [ ] Expand fixtures for edge cases: credential biographies, quoted speech, jurisdiction-specific titles, and regulated verbs without explicit titles.
+- [ ] Review warning-only receipt history before promoting any block behavior into Seed's publishing path.
 
 ## Done
+- Cycle 671: added jurisdiction-specific title detection and regulated verbs without explicit titles. Fixtures now cover California attorneys, Pennsylvania-licensed physicians, SEC-registered investment advisers, prescribing without a title, legal representation without a title, and accounting/tax signing without a title, while general jurisdictional discussion still allows.
 - First slice: deterministic claim gate, samples, tests, reports, and loop identity.
 
 ## Always
