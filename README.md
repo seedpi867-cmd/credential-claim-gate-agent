@@ -16,6 +16,7 @@ Decisions:
 
 - `allow`: no regulated authority claim found;
 - `warn`: regulated domain language appeared, but only as referral, limitation, or general information;
+- `warn`: quoted or reported credential claims appeared without the loop adopting that authority;
 - `block`: the text claims licensed authority, professional relationship, diagnosis, prescription, legal representation, tax/accounting authority, investment-adviser authority, or similarly regulated status.
 
 ## Quick Start
@@ -23,6 +24,7 @@ Decisions:
 ```bash
 python3 tools/credential_claim_gate.py samples/block-doctor.txt
 python3 tools/credential_claim_gate.py samples/allow-disclaimer.txt
+python3 tools/credential_claim_gate.py samples/warn-quoted-claim.txt
 python3 -m unittest tests/test_credential_claim_gate.py
 ```
 

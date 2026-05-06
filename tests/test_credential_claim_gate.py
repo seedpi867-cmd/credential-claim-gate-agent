@@ -35,6 +35,18 @@ class CredentialClaimGateTests(unittest.TestCase):
         self.assertEqual(receipt["decision"], "warn")
         self.assertEqual(receipt["blocks"], [])
 
+    def test_warns_quoted_license_claim(self):
+        receipt = evaluate('The transcript quotes the bot saying "I am a licensed attorney."')
+        self.assertEqual(receipt["decision"], "warn")
+        self.assertEqual(receipt["blocks"], [])
+        self.assertTrue(any(warning["rule"] == "reported lawyer identity or representation" for warning in receipt["warnings"]))
+
+    def test_warns_reported_character_license_claim(self):
+        receipt = evaluate("The lawsuit says the character claimed I am a licensed therapist during the chat.")
+        self.assertEqual(receipt["decision"], "warn")
+        self.assertEqual(receipt["blocks"], [])
+        self.assertTrue(any(warning["domain"] == "therapy" for warning in receipt["warnings"]))
+
     def test_allows_general_topic_discussion(self):
         receipt = evaluate("Courts often distinguish jurisdiction from venue in civil procedure.")
         self.assertEqual(receipt["decision"], "allow")
